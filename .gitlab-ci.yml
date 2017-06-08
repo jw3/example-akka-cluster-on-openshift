@@ -1,0 +1,61 @@
+image: docker.ctc.com/ctc/sbt
+
+stages:
+  - test
+  - publish
+
+unit_test:
+  stage: test
+  script:
+#  - sbt compile
+#  - unset JAVA_OPTS http_proxy https_proxy
+#  - sbt coverage test
+  - sbt test
+
+publish_snapshots:
+  stage: publish
+  script:
+  - sbt publish
+  only:
+  - master
+
+publish_releases:
+  stage: publish
+  script:
+  - sbt publish
+  only:
+  - tags
+  only:
+  - /^rc-.*$/
+  - /^v\d.*$/
+
+docker_branch:
+  image: docker.ctc.com/ctc/sbt:docker
+  stage: publish
+  script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+
+  - sbt docker:publishLocal
+  - docker tag $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+  - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+  - docker rmi $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+  only:
+  - branches
+  except:
+  - master
+  tags:
+  - containers
+
+docker_latest:
+  image: docker.ctc.com/ctc/sbt:docker
+  stage: publish
+  script:
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+
+  - sbt docker:publishLocal
+  - docker push $CI_REGISTRY_IMAGE
+  - docker rmi $CI_REGISTRY_IMAGE
+  only:
+  - master
+  tags:
+  - containers
