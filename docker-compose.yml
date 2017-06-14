@@ -1,0 +1,39 @@
+seed-1:
+  image: wassj/example-akka-cluster/cluster-seeds
+  hostname: seed-1
+  ports:
+    - 2551:2551
+  environment:
+    CLUSTER_HOST: seed-1
+    CLUSTER_PORT: 2551
+    CLUSTER_SEEDS: seed-1
+
+seed-2:
+  image: wassj/example-akka-cluster/cluster-seeds
+  hostname: seed-2
+  ports:
+    - 2552:2551
+  links:
+    - seed-1
+  environment:
+    CLUSTER_HOST: seed-2
+    CLUSTER_PORT: 2551
+    CLUSTER_SEEDS: "seed-1"
+
+worker-1:
+  image: wassj/example-akka-cluster/cluster-agent-1
+  links:
+    - seed-1
+    - seed-2
+  environment:
+    CLUSTER_HOST: 0.0.0.0
+    CLUSTER_SEEDS: "seed-1,seed-2"
+
+worker-2:
+  image: wassj/example-akka-cluster/cluster-agent-2
+  links:
+    - seed-1
+    - seed-2
+  environment:
+    CLUSTER_HOST: 0.0.0.0
+    CLUSTER_SEEDS: "seed-1,seed-2"

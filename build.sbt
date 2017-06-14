@@ -106,5 +106,6 @@ lazy val dockerSettings = Seq(
   dockerExposedPorts := Seq(9000),
   dockerRepository := Some("wassj/example-akka-cluster"),
   dockerBaseImage := "davidcaste/debian-oracle-java:jdk8",
-  version in Docker := name.value + "-" + version.value.replaceFirst("""-SNAPSHOT""", "")
+  version in Docker := name.value + "-" + version.value.replaceFirst("""-SNAPSHOT""", ""),
+  dockerUpdateLatest := true
 )

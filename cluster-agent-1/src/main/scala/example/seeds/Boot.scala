@@ -14,7 +14,7 @@ object Boot extends App {
   val cluster = Cluster(system)
 
   system.settings.config.getString("clustering.seeds").split(",").foreach { seed ⇒
-    println(s"joining seed $seed")
+    println(s"worker-1 is joining seed $seed")
     cluster.join(
       new Address("akka.tcp", clusterName, seed, 2551)
     )
