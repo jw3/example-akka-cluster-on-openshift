@@ -2,6 +2,7 @@ lazy val `cluster` =
   project.in(file("."))
   .aggregate(
     `cluster-seeds`,
+    `cluster-listener`,
     `cluster-agent`,
     `cluster-multi-agent`
   )
@@ -13,6 +14,16 @@ lazy val `cluster-seeds` =
   .settings(commonSettings: _*)
   .settings(
     name := "cluster-seeds",
+    libraryDependencies ++= commonLibraries
+  )
+  .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
+  .settings(dockerSettings: _*)
+
+lazy val `cluster-listener` =
+  project.in(file("cluster-listener"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "cluster-listener",
     libraryDependencies ++= commonLibraries
   )
   .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
