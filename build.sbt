@@ -19,7 +19,7 @@ lazy val `cluster-seeds` =
   .settings(dockerSettings: _*)
 
 lazy val `cluster-agent` =
-  project.in(file("cluster-agent-1"))
+  project.in(file("cluster-agent"))
   .settings(commonSettings: _*)
   .settings(
     name := "cluster-agent",

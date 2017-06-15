@@ -1,4 +1,4 @@
-package example.seeds
+package example.agent
 
 import akka.actor.{ActorSystem, Address}
 import akka.cluster.Cluster
