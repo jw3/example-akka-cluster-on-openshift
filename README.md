@@ -10,3 +10,9 @@ Akka Cluster Example
 - http://doc.akka.io/docs/akka/current/scala/cluster-usage.html
 - https://medium.com/google-cloud/clustering-akka-in-kubernetes-with-statefulset-and-deployment-459c0e05f2ea
 - https://github.com/saturnism/akka-kubernetes-example
+
+#### Developers
+
+To quickly get up and running, do a 
+
+`sbt docker:publishLocal && docker-compose rm -f && docker-compose up`
