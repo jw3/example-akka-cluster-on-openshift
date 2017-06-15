@@ -2,8 +2,7 @@ lazy val `cluster` =
   project.in(file("."))
   .aggregate(
     `cluster-seeds`,
-    `cluster-agent-1`,
-    `cluster-agent-2`,
+    `cluster-agent`,
     `cluster-multi-agent`
   )
   .settings(commonSettings: _*)
@@ -19,21 +18,11 @@ lazy val `cluster-seeds` =
   .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
   .settings(dockerSettings: _*)
 
-lazy val `cluster-agent-1` =
+lazy val `cluster-agent` =
   project.in(file("cluster-agent-1"))
   .settings(commonSettings: _*)
   .settings(
-    name := "cluster-agent-1",
-    libraryDependencies ++= commonLibraries
-  )
-  .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
-  .settings(dockerSettings: _*)
-
-lazy val `cluster-agent-2` =
-  project.in(file("cluster-agent-2"))
-  .settings(commonSettings: _*)
-  .settings(
-    name := "cluster-agent-2",
+    name := "cluster-agent",
     libraryDependencies ++= commonLibraries
   )
   .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
