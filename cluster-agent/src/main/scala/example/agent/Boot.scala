@@ -2,6 +2,7 @@ package example.agent
 
 import akka.actor.{ActorSystem, Address}
 import akka.cluster.Cluster
+import akka.cluster.client.ClusterClientReceptionist
 import akka.stream.ActorMaterializer
 
 
@@ -19,4 +20,8 @@ object Boot extends App {
       new Address("akka.tcp", clusterName, seed, 2551)
     )
   }
+
+  val adder = system.actorOf(Adder.props(), "add")
+
+  ClusterClientReceptionist(system).registerService(adder)
 }

@@ -4,7 +4,8 @@ lazy val `cluster` =
     `cluster-seeds`,
     `cluster-listener`,
     `cluster-agent`,
-    `cluster-multi-agent`
+    `cluster-multi-agent`,
+    `cluster-client`
   )
   .settings(commonSettings: _*)
   .enablePlugins(GitVersioning)
@@ -49,6 +50,16 @@ lazy val `cluster-multi-agent` =
   .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
   .settings(dockerSettings: _*)
 
+lazy val `cluster-client` =
+  project.in(file("cluster-client"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "cluster-client",
+    libraryDependencies ++= commonLibraries
+  )
+  .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
+  .settings(dockerSettings: _*)
+
 lazy val commonSettings = Seq(
   organization := "com.ctc.example",
   git.useGitDescribe := true,
@@ -82,6 +93,9 @@ lazy val commonLibraries = {
     "com.iheart" %% "ficus" % "1.4.0",
     "io.spray" %% "spray-json" % "1.3.3",
     "org.julienrf" %% "play-json-derived-codecs" % "4.0.0-RC1",
+
+    "com.typesafe.akka" %% "akka-cluster-tools" % akkaVersion,
+    "com.lightbend.akka" %% "akka-management-cluster-http" % "0.3",
 
     "com.typesafe.akka" %% "akka-actor" % akkaVersion,
     "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
