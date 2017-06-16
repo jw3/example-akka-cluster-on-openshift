@@ -52,6 +52,7 @@ lazy val `cluster-multi-agent` =
 
 lazy val `cluster-client` =
   project.in(file("cluster-client"))
+  .dependsOn(`cluster-multi-agent`)
   .settings(commonSettings: _*)
   .settings(
     name := "cluster-client",

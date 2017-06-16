@@ -2,12 +2,17 @@ package example.agent
 
 import akka.actor.{ActorPath, ActorSystem}
 import akka.cluster.client.{ClusterClient, ClusterClientSettings}
+import akka.stream.ActorMaterializer
+import akka.util.Timeout
+
+import scala.concurrent.duration.DurationInt
 
 
 object Boot extends App {
   val clusterName = "ClusterSystem"
 
   implicit val system = ActorSystem("cluster-client")
+  implicit val mat = ActorMaterializer()
 
   val initialContacts = Set(
     ActorPath.fromString(s"akka.tcp://$clusterName@seed-1:2551/system/receptionist"),
@@ -18,5 +23,6 @@ object Boot extends App {
     ClusterClientSettings(system).withInitialContacts(initialContacts)
   ), "client")
 
-  c ! ClusterClient.Send("/user/add", "hello from cluster-client", localAffinity = true)
+  implicit val timeout = Timeout(10 seconds)
+  HttpInterface.up(c, "0.0.0.0", 9000)
 }
