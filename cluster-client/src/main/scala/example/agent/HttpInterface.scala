@@ -7,9 +7,8 @@ import akka.http.scaladsl.model.{StatusCode, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
+import com.typesafe.scalalogging.LazyLogging
 import example.api._
-
-import scala.concurrent.ExecutionContext
 
 
 object HttpInterface extends HttpInterface {
@@ -19,12 +18,13 @@ object HttpInterface extends HttpInterface {
   }
 }
 
-trait HttpInterface {
+trait HttpInterface extends LazyLogging {
+  import StatusCodes._
   import akka.http.scaladsl.server.Directives._
   import akka.pattern.ask
 
 
-  def routes(c: ActorRef)(implicit ec: ExecutionContext, timeout: Timeout): Route = {
+  def routes(c: ActorRef)(implicit timeout: Timeout): Route = {
     pathPrefix("api") {
       path("op" / IntNumber / Segment / IntNumber) { (lhs, op, rhs) ⇒
         val f: (Int, Int) ⇒ Operation = op match {
@@ -34,11 +34,15 @@ trait HttpInterface {
           case "div" ⇒ Divide.apply
         }
 
-        val r = c ? ClusterClient.Send(s"/user/$op", f(lhs, rhs), localAffinity = true)
-        complete(r.map {
-          case ec: StatusCode ⇒ ec
-          case r: OpResult ⇒ StatusCodes.NotFound
-        })
+        logger.debug(s"received op request [$lhs $op $rhs]")
+
+        val r = c ? ClusterClient.Send(s"/user/$op", f(lhs, rhs), localAffinity = false)
+        onSuccess(r) {
+          case ec: StatusCode ⇒ complete(ec)
+          case r: OpResult ⇒
+            logger.debug(s"received result of op($lhs $op $rhs) --> $r")
+            complete(OK → r.toString)
+        }
       }
     }
   }

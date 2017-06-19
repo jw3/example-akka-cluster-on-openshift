@@ -9,6 +9,8 @@ object Subtractor {
 
 class Subtractor extends Actor with ActorLogging {
   def receive = {
-    case Subtract(l, r) ⇒ sender ! Difference(l - r)
+    case Subtract(l, r) ⇒
+      log.info("executing: {} - {}", l, r)
+      sender ! Difference(l - r)
   }
 }

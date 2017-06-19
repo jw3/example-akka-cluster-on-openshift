@@ -9,6 +9,8 @@ object Multiplier {
 
 class Multiplier extends Actor with ActorLogging {
   def receive = {
-    case Multiply(l, r) ⇒ sender ! Product(l * r)
+    case Multiply(l, r) ⇒
+      log.info("executing: {} * {}", l, r)
+      sender ! Product(l * r)
   }
 }

@@ -10,7 +10,7 @@ object Adder {
 class Adder extends Actor with ActorLogging {
   def receive = {
     case Add(l, r) ⇒
-      log.debug("executing: {} + {}", l, r)
+      log.info("executing: {} + {}", l, r)
       sender ! Sum(l + r)
   }
 }

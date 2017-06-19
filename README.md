@@ -58,3 +58,10 @@ Examples: ./akka-cluster localhost 9999 is-available
           ./akka-cluster localhost 9999 -p 2551 join akka.tcp://MySystem@darkstar:2552
           ./akka-cluster localhost 9999 -p 2551 cluster-status
 ```
+
+
+
+#### Other
+- https://stackoverflow.com/a/36020131
+- https://github.com/hseeberger/constructr
+- 

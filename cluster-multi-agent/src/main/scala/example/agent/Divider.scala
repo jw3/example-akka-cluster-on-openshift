@@ -10,6 +10,8 @@ object Divider {
 
 class Divider extends Actor with ActorLogging {
   def receive = {
-    case Divide(l, r) ⇒ sender ! Quotient(l / r)
+    case Divide(l, r) ⇒
+      log.info("executing: {} / {}", l, r)
+      sender ! Quotient(l / r)
   }
 }
