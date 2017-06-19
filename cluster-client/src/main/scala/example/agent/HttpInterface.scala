@@ -7,10 +7,7 @@ import akka.http.scaladsl.model.{StatusCode, StatusCodes}
 import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
-import example.agent.Adder.Add
-import example.agent.Divider.Divide
-import example.agent.Multiplier.Multiply
-import example.agent.Subtractor.Subtract
+import example.api._
 
 import scala.concurrent.ExecutionContext
 

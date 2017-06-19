@@ -1,6 +1,7 @@
 lazy val `cluster` =
   project.in(file("."))
   .aggregate(
+    `api`,
     `cluster-seeds`,
     `cluster-listener`,
     `cluster-agent`,
@@ -10,8 +11,18 @@ lazy val `cluster` =
   .settings(commonSettings: _*)
   .enablePlugins(GitVersioning)
 
+lazy val `api` =
+  project.in(file("api"))
+  .settings(commonSettings: _*)
+  .settings(
+    name := "api",
+    libraryDependencies ++= commonLibraries
+  )
+  .enablePlugins(GitVersioning)
+
 lazy val `cluster-seeds` =
   project.in(file("cluster-seeds"))
+  .dependsOn(`api`)
   .settings(commonSettings: _*)
   .settings(
     name := "cluster-seeds",
@@ -22,6 +33,7 @@ lazy val `cluster-seeds` =
 
 lazy val `cluster-listener` =
   project.in(file("cluster-listener"))
+  .dependsOn(`api`)
   .settings(commonSettings: _*)
   .settings(
     name := "cluster-listener",
@@ -32,6 +44,7 @@ lazy val `cluster-listener` =
 
 lazy val `cluster-agent` =
   project.in(file("cluster-agent"))
+  .dependsOn(`api`)
   .settings(commonSettings: _*)
   .settings(
     name := "cluster-agent",
@@ -42,6 +55,7 @@ lazy val `cluster-agent` =
 
 lazy val `cluster-multi-agent` =
   project.in(file("cluster-multi-agent"))
+  .dependsOn(`api`)
   .settings(commonSettings: _*)
   .settings(
     name := "cluster-multi-agent",
@@ -52,7 +66,7 @@ lazy val `cluster-multi-agent` =
 
 lazy val `cluster-client` =
   project.in(file("cluster-client"))
-  .dependsOn(`cluster-multi-agent`)
+  .dependsOn(`api`)
   .settings(commonSettings: _*)
   .settings(
     name := "cluster-client",
