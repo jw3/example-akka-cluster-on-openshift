@@ -12,23 +12,6 @@ unit_test:
 #  - sbt coverage test
   - sbt test
 
-publish_snapshots:
-  stage: publish
-  script:
-  - sbt publish
-  only:
-  - master
-
-publish_releases:
-  stage: publish
-  script:
-  - sbt publish
-  only:
-  - tags
-  only:
-  - /^rc-.*$/
-  - /^v\d.*$/
-
 docker_branch:
   image: docker.ctc.com/ctc/sbt:docker
   stage: publish
