@@ -23,4 +23,7 @@ object Boot extends App {
 
   val echo = system.actorOf(EchoAgent.props(), "echo")
   ClusterClientReceptionist(system).registerService(echo)
+
+  val modulo = system.actorOf(Modulo.props(), "mod")
+  ClusterClientReceptionist(system).registerService(modulo)
 }

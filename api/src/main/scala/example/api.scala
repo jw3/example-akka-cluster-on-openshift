@@ -21,12 +21,14 @@ object api {
       val DiffName = fname[Difference]
       val ProdName = fname[Product]
       val QuotName = fname[Quotient]
+      val RemainderName = fname[Remainder]
 
       override def write(obj: OpResult): JsValue = obj match {
         case o: Sum ⇒ JsObject(SumName → o.toJson)
         case o: Difference ⇒ JsObject(DiffName → o.toJson)
         case o: Product ⇒ JsObject(ProdName → o.toJson)
         case o: Quotient ⇒ JsObject(QuotName → o.toJson)
+        case o: Remainder ⇒ JsObject(RemainderName → o.toJson)
       }
 
       override def read(json: JsValue): OpResult =
@@ -35,6 +37,7 @@ object api {
           case Seq((DiffName, js)) ⇒ js.convertTo[Difference]
           case Seq((ProdName, js)) ⇒ js.convertTo[Product]
           case Seq((QuotName, js)) ⇒ js.convertTo[Quotient]
+          case Seq((RemainderName, js)) ⇒ js.convertTo[Remainder]
           case _ ⇒ throw new RuntimeException(s"unable to deserialize OpResult: $json")
         }
     }
@@ -65,5 +68,11 @@ object api {
   case class Quotient(res: Int) extends OpResult
   object Quotient extends DefaultJsonProtocol {
     implicit val format: RootJsonFormat[Quotient] = jsonFormat1(Quotient.apply)
+  }
+
+  case class Mod(lhs: Int, rhs: Int) extends Operation
+  case class Remainder(res: Int) extends OpResult
+  object Remainder extends DefaultJsonProtocol {
+    implicit val format: RootJsonFormat[Remainder] = jsonFormat1(Remainder.apply)
   }
 }

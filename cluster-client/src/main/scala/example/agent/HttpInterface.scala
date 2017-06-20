@@ -32,6 +32,7 @@ trait HttpInterface extends LazyLogging {
           case "sub" ⇒ Subtract.apply
           case "mul" ⇒ Multiply.apply
           case "div" ⇒ Divide.apply
+          case "mod" ⇒ Mod.apply
         }
 
         logger.debug(s"received op request [$lhs $op $rhs]")
