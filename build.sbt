@@ -1,3 +1,4 @@
+import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
 lazy val `cluster` =
   project.in(file("."))
   .aggregate(
@@ -131,10 +132,20 @@ lazy val commonLibraries = {
   )
 }
 
-lazy val dockerSettings = Seq(
-  dockerExposedPorts := Seq(9000),
-  dockerRepository := Some("example-akka-cluster"),
-  dockerBaseImage := "davidcaste/debian-oracle-java:jdk8",
-  version in Docker := name.value + "-" + version.value.replaceFirst("""-SNAPSHOT""", ""),
-  dockerUpdateLatest := true
-)
+lazy val dockerSettings = {
+  import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
+
+  Seq(
+    dockerCommands ++= Seq(
+      Cmd("USER", "root"),
+      ExecCmd("RUN", "chgrp", "-R", "0", "."),
+      ExecCmd("RUN", "chmod", "-R", "g+rwX", "."),
+      Cmd("USER", "10001")
+    ),
+    dockerExposedPorts := Seq(9000),
+    dockerRepository := Some("example-akka-cluster"),
+    dockerBaseImage := "davidcaste/debian-oracle-java:jdk8",
+    version in Docker := name.value + "-" + version.value.replaceFirst("""-SNAPSHOT""", ""),
+    dockerUpdateLatest := true
+  )
+}
