@@ -4,7 +4,7 @@ import akka.actor.{Actor, ActorLogging, Props}
 import example.api.{Difference, Subtract}
 
 object Subtractor {
-  def props() = Props(new Adder)
+  def props() = Props(new Subtractor)
 }
 
 class Subtractor extends Actor with ActorLogging {

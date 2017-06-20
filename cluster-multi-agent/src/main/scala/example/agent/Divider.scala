@@ -5,7 +5,7 @@ import example.api.{Divide, Quotient}
 
 
 object Divider {
-  def props() = Props(new Adder)
+  def props() = Props(new Divider)
 }
 
 class Divider extends Actor with ActorLogging {

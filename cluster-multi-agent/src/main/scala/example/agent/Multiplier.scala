@@ -4,7 +4,7 @@ import akka.actor.{Actor, ActorLogging, Props}
 import example.api.{Multiply, Product}
 
 object Multiplier {
-  def props() = Props(new Adder)
+  def props() = Props(new Multiplier)
 }
 
 class Multiplier extends Actor with ActorLogging {
