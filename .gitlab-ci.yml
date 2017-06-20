@@ -36,9 +36,24 @@ docker_branch:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
 
   - sbt docker:publishLocal
-  - docker tag $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
-  - docker push $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
-  - docker rmi $CI_REGISTRY_IMAGE:$CI_BUILD_REF_NAME
+
+  - docker tag example-akka-cluster/cluster-seeds $CI_REGISTRY_IMAGE:seed-$CI_BUILD_REF_NAME
+  - docker tag example-akka-cluster/cluster-listener $CI_REGISTRY_IMAGE:listener-$CI_BUILD_REF_NAME
+  - docker tag example-akka-cluster/cluster-agent $CI_REGISTRY_IMAGE:agent-$CI_BUILD_REF_NAME
+  - docker tag example-akka-cluster/cluster-multi-agent $CI_REGISTRY_IMAGE:multi-agent-$CI_BUILD_REF_NAME
+  - docker tag example-akka-cluster/cluster-client $CI_REGISTRY_IMAGE:client-$CI_BUILD_REF_NAME
+
+  - docker push $CI_REGISTRY_IMAGE:seed-$CI_BUILD_REF_NAME
+  - docker push $CI_REGISTRY_IMAGE:listener-$CI_BUILD_REF_NAME
+  - docker push $CI_REGISTRY_IMAGE:agent-$CI_BUILD_REF_NAME
+  - docker push $CI_REGISTRY_IMAGE:multi-agent-$CI_BUILD_REF_NAME
+  - docker push $CI_REGISTRY_IMAGE:client-$CI_BUILD_REF_NAME
+
+  - docker rmi $CI_REGISTRY_IMAGE:seed-$CI_BUILD_REF_NAME
+  - docker rmi $CI_REGISTRY_IMAGE:listener-$CI_BUILD_REF_NAME
+  - docker rmi $CI_REGISTRY_IMAGE:agent-$CI_BUILD_REF_NAME
+  - docker rmi $CI_REGISTRY_IMAGE:multi-agent-$CI_BUILD_REF_NAME
+  - docker rmi $CI_REGISTRY_IMAGE:client-$CI_BUILD_REF_NAME
   only:
   - branches
   except:
@@ -53,8 +68,24 @@ docker_latest:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
 
   - sbt docker:publishLocal
-  - docker push $CI_REGISTRY_IMAGE
-  - docker rmi $CI_REGISTRY_IMAGE
+
+  - docker tag example-akka-cluster/cluster-seeds $CI_REGISTRY_IMAGE:seed
+  - docker tag example-akka-cluster/cluster-listener $CI_REGISTRY_IMAGE:listener
+  - docker tag example-akka-cluster/cluster-agent $CI_REGISTRY_IMAGE:agent
+  - docker tag example-akka-cluster/cluster-multi-agent $CI_REGISTRY_IMAGE:multi-agent
+  - docker tag example-akka-cluster/cluster-client $CI_REGISTRY_IMAGE:client
+
+  - docker push $CI_REGISTRY_IMAGE:seed
+  - docker push $CI_REGISTRY_IMAGE:listener
+  - docker push $CI_REGISTRY_IMAGE:agent
+  - docker push $CI_REGISTRY_IMAGE:multi-agent
+  - docker push $CI_REGISTRY_IMAGE:client
+
+  - docker rmi $CI_REGISTRY_IMAGE:seed
+  - docker rmi $CI_REGISTRY_IMAGE:listener
+  - docker rmi $CI_REGISTRY_IMAGE:agent
+  - docker rmi $CI_REGISTRY_IMAGE:multi-agent
+  - docker rmi $CI_REGISTRY_IMAGE:client
   only:
   - master
   tags:
