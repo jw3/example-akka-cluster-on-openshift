@@ -7,25 +7,76 @@ objects:
   kind: Deployment
   metadata:
     labels:
-      run: akka-worker
-    name: akka-worker
+      run: akka-workers
+    name: akka-workers
   spec:
-    replicas: 4
+    replicas: 1
     selector:
       matchLabels:
-        run: akka-worker
+        run: akka-workers
     template:
       metadata:
         labels:
-          run: akka-worker
+          run: akka-workers
       spec:
         containers:
-        - name: akka-worker
+        - name: akka-modulo-agent
           image: docker.ctc.com/wassj/example-akka-cluster:agent
           env:
           - name: CLUSTER_SEEDS
             value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
-          - name: CLUSTER_IP
+          - name: CLUSTER_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          livenessProbe:
+            tcpSocket:
+              port: 2551
+          ports:
+          - containerPort: 2551
+            protocol: TCP
+
+        - name: akka-math-agents
+          image: docker.ctc.com/wassj/example-akka-cluster:multi-agent
+          env:
+          - name: CLUSTER_SEEDS
+            value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          - name: CLUSTER_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          livenessProbe:
+            tcpSocket:
+              port: 2551
+          ports:
+          - containerPort: 2551
+            protocol: TCP
+
+        - name: akka-cluster-listener
+          image: docker.ctc.com/wassj/example-akka-cluster:listener
+          env:
+          - name: CLUSTER_SEEDS
+            value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          - name: CLUSTER_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          livenessProbe:
+            tcpSocket:
+              port: 2551
+          ports:
+          - containerPort: 2551
+            protocol: TCP
+
+        - name: akka-cluster-client
+          image: docker.ctc.com/wassj/example-akka-cluster:client
+          env:
+          - name: CLUSTER_SEEDS
+            value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          - name: CLUSTER_HOST
             valueFrom:
               fieldRef:
                 apiVersion: v1
