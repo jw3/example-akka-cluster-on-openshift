@@ -14,10 +14,9 @@ object Boot extends App {
   implicit val system = ActorSystem("cluster-client")
   implicit val mat = ActorMaterializer()
 
-  val initialContacts = Set(
-    ActorPath.fromString(s"akka.tcp://$clusterName@seed-1:2551/system/receptionist"),
-    ActorPath.fromString(s"akka.tcp://$clusterName@seed-2:2551/system/receptionist")
-  )
+  val initialContacts = system.settings.config.getString("clustering.seeds").split(",").map { seed ⇒
+    ActorPath.fromString(s"akka.tcp://$clusterName@$seed:2551/system/receptionist")
+  }.toSet
 
   val c = system.actorOf(ClusterClient.props(
     ClusterClientSettings(system).withInitialContacts(initialContacts)
