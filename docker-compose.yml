@@ -28,7 +28,7 @@ listener:
     - seed-2
   environment:
     CLUSTER_SEEDS: seed-1,seed-2
-    CLUSTER_IP: ""
+    CLUSTER_HOST: ""
     CLUSTER_PORT: 0
 
 worker-1:
@@ -41,7 +41,7 @@ worker-1:
     - seed-2
   environment:
     CLUSTER_SEEDS: seed-1,seed-2
-    CLUSTER_IP: ""
+    CLUSTER_HOST: ""
     CLUSTER_PORT: 0
 
 worker-2:
@@ -54,7 +54,7 @@ worker-2:
     - seed-2
   environment:
     CLUSTER_SEEDS: seed-1,seed-2
-    CLUSTER_IP: ""
+    CLUSTER_HOST: ""
     CLUSTER_PORT: 0
 
 worker-3:
@@ -67,7 +67,7 @@ worker-3:
     - seed-2
   environment:
     CLUSTER_SEEDS: seed-1,seed-2
-    CLUSTER_IP: ""
+    CLUSTER_HOST: ""
     CLUSTER_PORT: 0
 
 cluster-multi-agent:
@@ -80,7 +80,7 @@ cluster-multi-agent:
     - seed-2
   environment:
     CLUSTER_SEEDS: seed-1,seed-2
-    CLUSTER_IP: ""
+    CLUSTER_HOST: ""
     CLUSTER_PORT: 0
 
 cluster-client:
@@ -93,5 +93,5 @@ cluster-client:
     - seed-2
   environment:
     CLUSTER_SEEDS: seed-1,seed-2
-    CLUSTER_IP: ""
+    CLUSTER_HOST: ""
     CLUSTER_PORT: 0
