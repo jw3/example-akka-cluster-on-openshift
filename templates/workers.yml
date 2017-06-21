@@ -7,17 +7,17 @@ objects:
   kind: Deployment
   metadata:
     labels:
-      run: akka-workers
-    name: akka-workers
+      run: akka-modulo-agent
+    name: akka-modulo-agent
   spec:
     replicas: 1
     selector:
       matchLabels:
-        run: akka-workers
+        run: akka-modulo-agent
     template:
       metadata:
         labels:
-          run: akka-workers
+          run: akka-modulo-agent
       spec:
         containers:
         - name: akka-modulo-agent
@@ -36,7 +36,24 @@ objects:
           ports:
           - containerPort: 2551
             protocol: TCP
-
+          imagePullPolicy: Always
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      run: akka-math-agents
+    name: akka-math-agents
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        run: akka-math-agents
+    template:
+      metadata:
+        labels:
+          run: akka-math-agents
+      spec:
+        containers:
         - name: akka-math-agents
           image: docker.ctc.com/wassj/example-akka-cluster:multi-agent
           env:
@@ -53,7 +70,24 @@ objects:
           ports:
           - containerPort: 2551
             protocol: TCP
-
+          imagePullPolicy: Always
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      run: akka-cluster-listener
+    name: akka-cluster-listener
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        run: akka-cluster-listener
+    template:
+      metadata:
+        labels:
+          run: akka-cluster-listener
+      spec:
+        containers:
         - name: akka-cluster-listener
           image: docker.ctc.com/wassj/example-akka-cluster:listener
           env:
@@ -70,7 +104,24 @@ objects:
           ports:
           - containerPort: 2551
             protocol: TCP
-
+          imagePullPolicy: Always
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      run: akka-cluster-client
+    name: akka-cluster-client
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        run: akka-cluster-client
+    template:
+      metadata:
+        labels:
+          run: akka-cluster-client
+      spec:
+        containers:
         - name: akka-cluster-client
           image: docker.ctc.com/wassj/example-akka-cluster:client
           env:
@@ -87,3 +138,4 @@ objects:
           ports:
           - containerPort: 2551
             protocol: TCP
+          imagePullPolicy: Always
