@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: akka-cluster-seed
+objects:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: akka-seed
+  spec:
+    ports:
+    - port: 2551
+      protocol: TCP
+      targetPort: 2551
+    selector:
+      run: akka-seed
+    clusterIP: None
+- apiVersion: apps/v1beta1
+  kind: StatefulSet
+  metadata:
+    labels:
+      run: akka-seed
+    name: akka-seed
+  spec:
+    serviceName: akka-seed
+    replicas: 2
+    selector:
+      matchLabels:
+        run: akka-seed
+    template:
+      metadata:
+        labels:
+          run: akka-seed
+      spec:
+        containers:
+        - name: akka-seed
+          image: docker.ctc.com/wassj/example-akka-cluster:seed
+          env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: CLUSTER_SEEDS
+            value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          command: ["/bin/sh", "-c", "CLUSTER_HOST=${POD_NAME}.akka-seed /opt/docker/bin/cluster-seeds"]
+          livenessProbe:
+            tcpSocket:
+              port: 2551
+          ports:
+          - containerPort: 2551
+            protocol: TCP
+          imagePullPolicy: Always

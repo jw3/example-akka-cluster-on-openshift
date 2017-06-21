@@ -79,4 +79,6 @@ Examples: ./akka-cluster localhost 9999 is-available
 #### Other
 - https://stackoverflow.com/a/36020131
 - https://github.com/hseeberger/constructr
-- 
+- https://docs.openshift.org/latest/dev_guide/templates.html
+- https://docs.openshift.org/latest/dev_guide/deployments/kubernetes_deployments.html
+

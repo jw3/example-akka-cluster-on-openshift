@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: akka-cluster-workers
+objects:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      run: akka-worker
+    name: akka-worker
+  spec:
+    replicas: 4
+    selector:
+      matchLabels:
+        run: akka-worker
+    template:
+      metadata:
+        labels:
+          run: akka-worker
+      spec:
+        containers:
+        - name: akka-worker
+          image: docker.ctc.com/wassj/example-akka-cluster:agent
+          env:
+          - name: CLUSTER_SEEDS
+            value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          - name: CLUSTER_IP
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          livenessProbe:
+            tcpSocket:
+              port: 2551
+          ports:
+          - containerPort: 2551
+            protocol: TCP
