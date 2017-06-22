@@ -26,6 +26,11 @@ trait HttpInterface extends LazyLogging {
 
   def routes(c: ActorRef)(implicit timeout: Timeout): Route = {
     pathPrefix("api") {
+      path("health") {
+        get {
+          complete(OK)
+        }
+      } ~
       path("op" / IntNumber / Segment / IntNumber) { (lhs, op, rhs) ⇒
         val f: (Int, Int) ⇒ Operation = op match {
           case "add" ⇒ Add.apply
