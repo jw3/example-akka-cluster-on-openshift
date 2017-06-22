@@ -105,6 +105,27 @@ objects:
           - containerPort: 2551
             protocol: TCP
           imagePullPolicy: Always
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    labels:
+      app: akka-cluster-client
+    name: akka-cluster-client
+  spec:
+    ports:
+    - name: 9000-tcp
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+    selector:
+      app: akka-cluster-client
+      deployment: akka-cluster-client
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
 - apiVersion: extensions/v1beta1
   kind: Deployment
   metadata:
