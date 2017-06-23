@@ -70,3 +70,16 @@ objects:
     test: false
     triggers:
     - type: ConfigChange
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: akka-cluster-client
+  spec:
+    host: example-akka-cluster.openshift.ctc.com
+    to:
+      kind: Service
+      name: akka-cluster-client
+      weight: 100
+    port:
+      targetPort: 9000-tcp
+    wildcardPolicy: None
