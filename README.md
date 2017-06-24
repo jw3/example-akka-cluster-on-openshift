@@ -1,6 +1,21 @@
 Akka Cluster Example
 ===
 
+Models scenarios in the cluster that are interesting for Agents and DSL-as-a-Service
+
+- Deploying actors individually
+- Deploying actors in multiples
+- Service discovery via the ClusterClient mechanism
+  - this is looking up the actor by name regardless of where it was deployed
+- Broadcast messages to a named group with ClusterClient with 0 or more responses
+- Communicating to cluster Actors from a non-cluster client
+- Docker Compose and OpenShift configurations
+
+#### Todo
+
+- Distributed Data example
+- Distributed PubSub
+
 #### Components
 - Akka Cluster 2.5
 - OpenShift 3.5
