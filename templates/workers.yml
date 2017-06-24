@@ -160,3 +160,151 @@ objects:
           - containerPort: 2551
             protocol: TCP
           imagePullPolicy: Always
+
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      run: akka-math-agent-add
+    name: akka-math-agent-add
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        run: akka-math-agent-add
+    template:
+      metadata:
+        labels:
+          run: akka-math-agent-add
+      spec:
+        containers:
+        - name: akka-math-agent-add
+          image: docker.ctc.com/wassj/example-akka-cluster:multi-agent
+          env:
+          - name: CLUSTER_SEEDS
+            value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          - name: CLUSTER_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          - name: BOOT_ONE_AGENT
+            value: add
+          livenessProbe:
+            tcpSocket:
+              port: 2551
+          ports:
+          - containerPort: 2551
+            protocol: TCP
+          imagePullPolicy: Always
+
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      run: akka-math-agent-sub
+    name: akka-math-agent-sub
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        run: akka-math-agent-sub
+    template:
+      metadata:
+        labels:
+          run: akka-math-agent-sub
+      spec:
+        containers:
+        - name: akka-math-agent-sub
+          image: docker.ctc.com/wassj/example-akka-cluster:multi-agent
+          env:
+          - name: CLUSTER_SEEDS
+            value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          - name: CLUSTER_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          - name: BOOT_ONE_AGENT
+            value: sub
+          livenessProbe:
+            tcpSocket:
+              port: 2551
+          ports:
+          - containerPort: 2551
+            protocol: TCP
+          imagePullPolicy: Always
+
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      run: akka-math-agent-mul
+    name: akka-math-agent-mul
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        run: akka-math-agent-mul
+    template:
+      metadata:
+        labels:
+          run: akka-math-agent-mul
+      spec:
+        containers:
+        - name: akka-math-agent-mul
+          image: docker.ctc.com/wassj/example-akka-cluster:multi-agent
+          env:
+          - name: CLUSTER_SEEDS
+            value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          - name: CLUSTER_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          - name: BOOT_ONE_AGENT
+            value: mul
+          livenessProbe:
+            tcpSocket:
+              port: 2551
+          ports:
+          - containerPort: 2551
+            protocol: TCP
+          imagePullPolicy: Always
+
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    labels:
+      run: akka-math-agent-div
+    name: akka-math-agent-div
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        run: akka-math-agent-div
+    template:
+      metadata:
+        labels:
+          run: akka-math-agent-div
+      spec:
+        containers:
+        - name: akka-math-agent-div
+          image: docker.ctc.com/wassj/example-akka-cluster:multi-agent
+          env:
+          - name: CLUSTER_SEEDS
+            value: akka-seed-0.akka-seed,akka-seed-1.akka-seed
+          - name: CLUSTER_HOST
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          - name: BOOT_ONE_AGENT
+            value: div
+          livenessProbe:
+            tcpSocket:
+              port: 2551
+          ports:
+          - containerPort: 2551
+            protocol: TCP
+          imagePullPolicy: Always
