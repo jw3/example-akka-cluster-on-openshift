@@ -1,5 +1,6 @@
 package example.agent
 
+import akka.actor.Status.Failure
 import akka.actor.{ActorRef, ActorSystem}
 import akka.cluster.client.ClusterClient
 import akka.http.scaladsl.Http
@@ -31,25 +32,46 @@ trait HttpInterface extends LazyLogging {
           complete(OK)
         }
       } ~
-      path("op" / IntNumber / Segment / IntNumber) { (lhs, op, rhs) ⇒
-        val f: (Int, Int) ⇒ Operation = op match {
-          case "add" ⇒ Add.apply
-          case "sub" ⇒ Subtract.apply
-          case "mul" ⇒ Multiply.apply
-          case "div" ⇒ Divide.apply
-          case "mod" ⇒ Mod.apply
-        }
+        path("op" / IntNumber / Segment / IntNumber) { (lhs, op, rhs) ⇒
+          val f: (Int, Int) ⇒ Operation = op match {
+            case "add" ⇒ Add.apply
+            case "sub" ⇒ Subtract.apply
+            case "mul" ⇒ Multiply.apply
+            case "div" ⇒ Divide.apply
+            case "mod" ⇒ Mod.apply
+          }
 
-        logger.debug(s"received op request [$lhs $op $rhs]")
+          logger.debug(s"received op request [$lhs $op $rhs]")
 
-        val r = c ? ClusterClient.Send(s"/user/$op", f(lhs, rhs), localAffinity = false)
-        onSuccess(r) {
-          case ec: StatusCode ⇒ complete(ec)
-          case r: OpResult ⇒
-            logger.debug(s"received result of op($lhs $op $rhs) --> $r")
-            complete(OK → r.toString)
+          val r = c ? ClusterClient.Send(s"/user/$op", f(lhs, rhs), localAffinity = false)
+          onSuccess(r) {
+            case ec: StatusCode ⇒ complete(ec)
+            case r: OpResult ⇒
+              logger.debug(s"received result of op($lhs $op $rhs) --> $r")
+              complete(OK → r.toString)
+          }
+        } ~
+        path("math" / IntNumber / Segment / IntNumber) { (lhs, op, rhs) ⇒
+          val f: (Int, Int) ⇒ Operation = op match {
+            case "add" ⇒ Add.apply
+            case "sub" ⇒ Subtract.apply
+            case "mul" ⇒ Multiply.apply
+            case "div" ⇒ Divide.apply
+            case "mod" ⇒ Mod.apply
+          }
+
+          logger.debug(s"received math request [$lhs $op $rhs]")
+
+          val r = c ? ClusterClient.SendToAll("/user/math", f(lhs, rhs))
+          onSuccess(r) {
+            case ec: StatusCode ⇒ complete(ec)
+            case r: OpResult ⇒
+              logger.debug(s"received result of op($lhs $op $rhs) --> $r")
+              complete(OK → r.toString)
+            case Failure(_) ⇒
+              complete(InternalServerError)
+          }
         }
-      }
     }
   }
 }
