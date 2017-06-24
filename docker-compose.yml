@@ -95,3 +95,59 @@ cluster-client:
     CLUSTER_SEEDS: seed-1,seed-2
     CLUSTER_HOST: ""
     CLUSTER_PORT: 0
+
+add:
+  image: example-akka-cluster/cluster-multi-agent
+  hostname: worker-add
+  ports:
+    - 2557:2551
+  links:
+    - seed-1
+    - seed-2
+  environment:
+    BOOT_ONE_AGENT: add
+    CLUSTER_SEEDS: seed-1,seed-2
+    CLUSTER_HOST: ""
+    CLUSTER_PORT: 0
+
+sub:
+  image: example-akka-cluster/cluster-multi-agent
+  hostname: worker-sub
+  ports:
+    - 2558:2551
+  links:
+    - seed-1
+    - seed-2
+  environment:
+    BOOT_ONE_AGENT: sub
+    CLUSTER_SEEDS: seed-1,seed-2
+    CLUSTER_HOST: ""
+    CLUSTER_PORT: 0
+
+mul:
+  image: example-akka-cluster/cluster-multi-agent
+  hostname: worker-mul
+  ports:
+    - 2559:2551
+  links:
+    - seed-1
+    - seed-2
+  environment:
+    BOOT_ONE_AGENT: mul
+    CLUSTER_SEEDS: seed-1,seed-2
+    CLUSTER_HOST: ""
+    CLUSTER_PORT: 0
+
+div:
+  image: example-akka-cluster/cluster-multi-agent
+  hostname: worker-div
+  ports:
+    - 2560:2551
+  links:
+    - seed-1
+    - seed-2
+  environment:
+    BOOT_ONE_AGENT: div
+    CLUSTER_SEEDS: seed-1,seed-2
+    CLUSTER_HOST: ""
+    CLUSTER_PORT: 0
