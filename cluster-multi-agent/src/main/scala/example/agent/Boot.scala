@@ -42,6 +42,7 @@ object Boot extends App with LazyLogging {
   }
 
   def startAll()(implicit system: ActorSystem) = {
+    logger.info(s"starting all math operators on this node")
     Seq(
       "add" → Adder.props(),
       "sub" → Subtractor.props(),
