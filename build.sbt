@@ -1,4 +1,3 @@
-import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
 lazy val `cluster` =
   project.in(file("."))
   .aggregate(
@@ -29,7 +28,7 @@ lazy val `cluster-seeds` =
     name := "cluster-seeds",
     libraryDependencies ++= commonLibraries
   )
-  .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
+  .enablePlugins(JavaServerAppPackaging, OpenShiftPlugin, GitVersioning)
   .settings(dockerSettings: _*)
 
 lazy val `cluster-listener` =
@@ -40,7 +39,7 @@ lazy val `cluster-listener` =
     name := "cluster-listener",
     libraryDependencies ++= commonLibraries
   )
-  .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
+  .enablePlugins(JavaServerAppPackaging, OpenShiftPlugin, GitVersioning)
   .settings(dockerSettings: _*)
 
 lazy val `cluster-agent` =
@@ -51,7 +50,7 @@ lazy val `cluster-agent` =
     name := "cluster-agent",
     libraryDependencies ++= commonLibraries
   )
-  .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
+  .enablePlugins(JavaServerAppPackaging, OpenShiftPlugin, GitVersioning)
   .settings(dockerSettings: _*)
 
 lazy val `cluster-multi-agent` =
@@ -62,7 +61,7 @@ lazy val `cluster-multi-agent` =
     name := "cluster-multi-agent",
     libraryDependencies ++= commonLibraries
   )
-  .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
+  .enablePlugins(JavaServerAppPackaging, OpenShiftPlugin, GitVersioning)
   .settings(dockerSettings: _*)
 
 lazy val `cluster-client` =
@@ -73,7 +72,7 @@ lazy val `cluster-client` =
     name := "cluster-client",
     libraryDependencies ++= commonLibraries
   )
-  .enablePlugins(JavaServerAppPackaging, DockerPlugin, GitVersioning)
+  .enablePlugins(JavaServerAppPackaging, OpenShiftPlugin, GitVersioning)
   .settings(dockerSettings: _*)
 
 lazy val commonSettings = Seq(
@@ -133,18 +132,9 @@ lazy val commonLibraries = {
 }
 
 lazy val dockerSettings = {
-  import com.typesafe.sbt.packager.docker.{Cmd, ExecCmd}
-
   Seq(
-    dockerCommands ++= Seq(
-      Cmd("USER", "root"),
-      ExecCmd("RUN", "chgrp", "-R", "0", "."),
-      ExecCmd("RUN", "chmod", "-R", "g+rwX", "."),
-      Cmd("USER", "10001")
-    ),
     dockerExposedPorts := Seq(9000),
     dockerRepository := Some("example-akka-cluster"),
-    dockerBaseImage := "davidcaste/debian-oracle-java:jdk8",
     version in Docker := name.value + "-" + version.value.replaceFirst("""-SNAPSHOT""", ""),
     dockerUpdateLatest := true
   )
