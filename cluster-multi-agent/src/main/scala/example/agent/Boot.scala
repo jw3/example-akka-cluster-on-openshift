@@ -11,10 +11,15 @@ object Boot extends App with LazyLogging {
 
   val clusterName = "ClusterSystem"
   implicit val system = ActorSystem(clusterName)
+  implicit val cluster = Cluster(system)
 
   sys.env.get("BOOT_ONE_AGENT") match {
-    case None ⇒ startAll()
+    case None ⇒
+      joinNodeToCluster
+      startAll()
+
     case Some(name) ⇒
+      joinNodeToCluster
       val f: OpPropsProvider = name match {
         case "add" ⇒ Adder.props _
         case "sub" ⇒ Subtractor.props _
@@ -28,15 +33,6 @@ object Boot extends App with LazyLogging {
   }
 
   def startOne(name: String, f: OpPropsProvider)(implicit system: ActorSystem) = {
-    val cluster = Cluster(system)
-
-    system.settings.config.getString("clustering.seeds").split(",").foreach { seed ⇒
-      logger.info(s"$name is joining seed $seed as math")
-      cluster.join(
-        new Address("akka.tcp", clusterName, seed, 2551)
-      )
-    }
-
     val math = system.actorOf(f(), "math")
     ClusterClientReceptionist(system).registerService(math)
   }
@@ -54,6 +50,15 @@ object Boot extends App with LazyLogging {
     }.foreach { ref ⇒
       logger.info("registering {} operator actor", ref.path)
       ClusterClientReceptionist(system).registerService(ref)
+    }
+  }
+
+  def joinNodeToCluster(implicit cluster: Cluster) = {
+    system.settings.config.getString("clustering.seeds").split(",").foreach { seed ⇒
+      logger.info(s"joining seed $seed")
+      cluster.join(
+        new Address("akka.tcp", clusterName, seed, 2551)
+      )
     }
   }
 }
