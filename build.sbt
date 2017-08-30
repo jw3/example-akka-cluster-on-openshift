@@ -1,4 +1,4 @@
-lazy val `cluster` =
+lazy val `example-akka-cluster` =
   project.in(file("."))
   .aggregate(
     `api`,
